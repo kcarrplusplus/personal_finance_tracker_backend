@@ -1,7 +1,11 @@
 const _ = require('dotenv/config');
 const express = require('express');
 const cors = require('cors');
-const routes = require('./routes');
+const session = require('express-session');
+const passport = require('passport');
+
+// local libraries
+const routes = require('./routes/index');
 
 const app = express();
 
@@ -9,7 +13,16 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended : true }));
 
-app.use('/authorization', routes.authorization);
+// authorization setup with sessions and passport
+app.use(session({
+    secret: process.env.LOCAL_SECRET,
+    resave: true,
+    saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use('/auth', routes.auth);
 app.use('/users', routes.users);
 app.use('/transactions', routes.transactions);
 
