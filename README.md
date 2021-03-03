@@ -1,5 +1,12 @@
 # Personal Finance App for Software Engineers
 
+## Proposed Architecture
+- Frontend - react, redux
+- charting - D3.js
+- Backend - node.js, express.js
+- database - postgres
+- cloud tooling - aws, docker 
+
 ## TODOS
 - Setup OAuth2 with Google, Twitter and Github
     - need to connect it to postgres
