@@ -1,10 +1,9 @@
 const Router = require('express').Router;
+const db = require('../db/queries');
 
 const router = Router();
 
 // TODO: add users routes
-router.get('/', (req, res) => {
-    return res.send('GET users');
-})
+router.get('/', db.getUsers)
 
 module.exports = router;
