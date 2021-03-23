@@ -7,7 +7,7 @@ accounts
 - account_type
 
 
-card
+cards
 - card_id
 - fk: acount_id
 - card_type
@@ -17,7 +17,7 @@ card
 - minimum_payment_due
 
 transactions
-- trxn_api
+- pk: trxn_id
 - fk: card_id
 - transaction_type
 - date_of_transaction
