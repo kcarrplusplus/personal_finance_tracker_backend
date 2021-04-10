@@ -19,10 +19,13 @@ const getUsers = (req, res) => {
 const postTransaction = (req, res) => {
     // create connecting card_id and account_id queries in order to make transaction insertion work
     // TODO: populate local database with card and account population.
-    const inputTransaction = 'INSERT INTO transactions(card_id, date_of_transaction, description, category, transaction_type, amount) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
-    const values = ['1', '2021-03-02', 'Gelato at Vinnies', 'Food & Drink', 'DEBIT', 550];
+    console.log(req.body);
+    const inputTransaction = 'INSERT INTO transactions(card_id, transaction_type, description, category, amount, date_of_transaction) VALUES (CAST ($1 as float), $2, $3, $4, CAST ($5 as float), to_timestamp($6)) RETURNING *';
+    let values = req.body;
+    values.date_of_transaction = Date.now() / 1000.0;
+    console.log(values);
     pool
-        .query(inputTransaction, values)
+        .query(inputTransaction, Object.values(values))
         .then(res => {
             console.log(res.rows[0]);
         })

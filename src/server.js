@@ -22,9 +22,11 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/auth', routes.auth);
-app.use('/users', routes.users);
-app.use('/transactions', routes.transactions);
+const apiPrefix = '/api/v1';
+
+app.use(`${apiPrefix}/auth`, routes.auth);
+app.use(`${apiPrefix}/users`, routes.users);
+app.use(`${apiPrefix}/transactions`, routes.transactions);
 
 app.listen(process.env.PORT, () => {
     console.log(`Personal Fin Tracker app running on port ${process.env.PORT}`);

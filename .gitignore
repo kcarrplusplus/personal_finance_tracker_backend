@@ -2,3 +2,4 @@ node_modules/
 package-lock.json
 *.env
 table_creation.sh
+notes.md

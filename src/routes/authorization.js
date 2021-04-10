@@ -3,9 +3,10 @@ const passportTwitter = require('../auth/twitter');
 const passportGithub = require('../auth/github');
 const passportGoogle = require('../auth/google');
 const { paidCustomer, requestTime } = require('../middleware/paid_customer');
+const { isUserAuthenticated } = require('../middleware/authorized');
 const router = Router();
 
-router.get('/login', paidCustomer, requestTime, (req, res, next) => {
+router.get('/login', requestTime, (req, res, next) => {
     console.log(req.requestTime);
     res.json({login: { title: 'Please Sign In with:' }});
 });
