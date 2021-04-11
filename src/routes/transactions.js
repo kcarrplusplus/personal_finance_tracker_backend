@@ -3,9 +3,7 @@ const db = require('../db/queries');
 const router = Router();
 
 // TODO: add transaction routes
-router.get('/', (req, res) => {
-    return res.send('GET transacations');
-});
+router.get('/', db.getTransactions);
 
 router.post('/', db.postTransaction);
 

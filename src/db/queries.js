@@ -16,6 +16,22 @@ const getUsers = (req, res) => {
     });
 };
 
+const getTransactions = (req, res) => {
+    const text = `
+        SELECT us.id, accts.account_id, cd.card_type, cd.card_id, trxn.*
+        FROM users us
+        INNER JOIN accounts accts on us.id=accts.user_id
+        INNER JOIN cards cd on accts.account_id=cd.account_id
+        RIGHT JOIN transactions trxn on cd.card_id=trxn.card_id
+        WHERE user_id=$1;
+    `;
+    const values = [1];
+
+    pool.query(text, values)
+        .then(res => res.rows)
+        .catch(e => console.error(e.stack))
+}
+
 const postTransaction = (req, res) => {
     // create connecting card_id and account_id queries in order to make transaction insertion work
     // TODO: populate local database with card and account population.
@@ -34,5 +50,6 @@ const postTransaction = (req, res) => {
 
 module.exports = {
     getUsers,
+    getTransactions,
     postTransaction
 };
