@@ -16,7 +16,7 @@ const getUsers = (req, res) => {
     });
 };
 
-const getTransactions = (req, res) => {
+const getTransactions = async (req, res) => {
     const text = `
         SELECT us.id, accts.account_id, cd.card_type, cd.card_id, trxn.*
         FROM users us
@@ -27,29 +27,43 @@ const getTransactions = (req, res) => {
     `;
     const values = [1];
 
-    pool.query(text, values)
-        .then(res => res.rows)
-        .catch(e => console.error(e.stack))
-}
+    try {
+        const allTransactionsForUser = await pool.query(text, values);
+        res.json(allTransactionsForUser.rows);
+    } catch (err) {
+        console.error(err.message);
+    }
+};
 
-const postTransaction = (req, res) => {
+const getTransaction = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const trxn = await pool.query("SELECT * FROM transactions WHERE trxn_id = $1", [
+            id
+        ]);
+        res.json(trxn.rows[0]);
+    } catch (err) {
+        console.error(err.message);
+    }
+};
+
+const postTransaction = async (req, res) => {
     // create connecting card_id and account_id queries in order to make transaction insertion work
     // TODO: populate local database with card and account population.
-    console.log(req.body);
-    const inputTransaction = 'INSERT INTO transactions(card_id, transaction_type, description, category, amount, date_of_transaction) VALUES (CAST ($1 as float), $2, $3, $4, CAST ($5 as float), to_timestamp($6)) RETURNING *';
-    let values = req.body;
-    values.date_of_transaction = Date.now() / 1000.0;
-    console.log(values);
-    pool
-        .query(inputTransaction, Object.values(values))
-        .then(res => {
-            console.log(res.rows[0]);
-        })
-        .catch(e => console.log(e.stack));
-}
+    try {
+        const inputTransaction = 'INSERT INTO transactions(card_id, transaction_type, description, category, amount, date_of_transaction) VALUES (CAST ($1 as float), $2, $3, $4, CAST ($5 as float), to_timestamp($6)) RETURNING *';
+        let values = req.body;
+        values.date_of_transaction = Date.now() / 1000.0;
+        const newTrxn = await pool.query(inputTransaction, Object.values(values));
+        res.json(newTrxn.rows[0])
+    } catch (err) {
+        console.error(err.message);
+    }
+};
 
 module.exports = {
     getUsers,
+    getTransaction,
     getTransactions,
     postTransaction
 };
