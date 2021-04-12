@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "initdb": "node tools/initdb.js",
     "start": "nodemon src/server.js",
     "test": "mocha --require @babel/register 'src/**/**spec.js'"
   },
